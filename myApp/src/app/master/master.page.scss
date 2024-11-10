@@ -1,0 +1,150 @@
+// Global container styling for dark theme
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 80vh;
+  padding: 1rem;
+  background-color: #121212; // Dark background for the page
+}
+
+// Styling for the table in dark theme
+.inventory-table {
+  width: 100%;
+  max-width: 800px;
+  border-collapse: collapse;
+  background-color: #1e1e1e; // Darker background for the table
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); // Subtle shadow for depth
+  border-radius: 8px;
+  overflow: hidden;
+  color: #e0e0e0; // Light text color for better readability
+
+  thead {
+    background-color: #333333; // Dark header background
+    color: #ffffff; // White text for headers
+  }
+
+  th,
+  td {
+    padding: 12px 16px;
+    text-align: center;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #2a2a2a; // Slightly lighter shade for alternating rows
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #1e1e1e; // Darker shade for odd rows
+  }
+
+  tbody tr:hover {
+    background-color: #444444; // Highlight color on hover
+  }
+
+  td {
+    border-top: 1px solid #444444; // Border color that blends with the dark theme
+    color: #e0e0e0; // Text color for readability
+  }
+}
+
+// Styling for the clickable detail link in dark theme
+.detail-link {
+  cursor: pointer;
+  color: #4ea3ff; // Light blue color for links
+  font-weight: bold;
+  text-decoration: underline;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #82cfff; // Slightly lighter color on hover
+  }
+}
+
+// Styling for pagination controls
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 1rem;
+  color: #e0e0e0;
+
+  label {
+    font-weight: bold;
+  }
+
+  select {
+    padding: 0.3rem;
+    border-radius: 4px;
+    background-color: #333333;
+    color: #e0e0e0;
+    border: 1px solid #555555;
+  }
+
+  button {
+    padding: 0.4rem 1rem;
+    background-color: #4ea3ff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:disabled {
+      background-color: #888888;
+      cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: #82cfff;
+    }
+  }
+
+  span {
+    font-weight: bold;
+  }
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+}
+
+.status-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.online {
+  background-color: green;
+}
+
+.offline {
+  background-color: red;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.search-bar input:focus {
+  border-color: #007bff;
+}

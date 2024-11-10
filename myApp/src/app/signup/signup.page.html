@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Signup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Signup</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="content">
+    <h1>Signup</h1>
+
+    <!-- Container to limit field and button width -->
+    <div class="form-container">
+      <!-- Display email as text -->
+      <div class="form-group">
+        <label>Email:</label>
+        <span>{{ email }}</span>
+      </div>
+
+      <!-- Password Input -->
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input id="password" type="password" [(ngModel)]="password" />
+      </div>
+
+      <!-- Confirm Password Input -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input id="confirmPassword" type="password" [(ngModel)]="confirmPassword" />
+      </div>
+
+      <!-- Signup and Cancel Buttons -->
+      <button ion-button color="success" expand="block" (click)="signup()">Signup</button>
+      <button ion-button color="light" expand="block" (click)="cancel()">Cancel</button>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    </div>
+  </div>
+</ion-content>

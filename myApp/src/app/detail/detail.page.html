@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Item Detail
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Item Detail</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="status-indicator">
+    <div class="status-circle" [ngClass]="{ 'online': isOnline, 'offline': !isOnline }"></div>
+    <span>{{ isOnline ? 'Online' : 'Offline' }}</span>
+  </div>
+
+  <div id="content">
+    <h1>Item Details</h1>
+
+    <div class="detail-card" *ngIf="item">
+      <!-- Name Input -->
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input id="name" type="text" [(ngModel)]="item.name" />
+      </div>
+
+      <!-- Quantity Input -->
+      <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input id="quantity" type="number" [(ngModel)]="item.quantity" />
+      </div>
+
+      <!-- Availability Dropdown -->
+      <div class="form-group">
+        <label for="available">Available:</label>
+        <select id="available" [(ngModel)]="item.available">
+          <option [value]="true">Yes</option>
+          <option [value]="false">No</option>
+        </select>
+      </div>
+
+      <!-- Last Edit (read-only) -->
+      <div class="form-group">
+        <label>Last Edit:</label>
+        <span>{{ item.lastEdit | date: 'short' }}</span>
+      </div>
+
+      <!-- Save Changes Button -->
+      <button ion-button color="success" expand="block" (click)="saveChanges()">Save Changes</button>
+    </div>
+
+    <div *ngIf="!item" class="not-found">
+      <p>Item not found.</p>
+    </div>
+
+    <div id="navigation">
+      <p>Go to the <span class="link" [routerLink]="['/master']">MASTER</span> page</p>
+    </div>
+  </div>
+</ion-content>

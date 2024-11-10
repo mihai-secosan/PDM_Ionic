@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Email</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Enter Your Email</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="content">
+    <h1>Enter Your Email</h1>
+
+    <!-- Container to limit field width -->
+    <div class="form-container">
+      <!-- Email Input -->
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input id="email" type="email" [(ngModel)]="email" required />
+      </div>
+
+      <!-- Continue Button -->
+      <button ion-button color="success" expand="block" (click)="continue()">Continue</button>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,65 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Master Inventory
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Inventory List</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="status-indicator">
+    <div class="status-circle" [ngClass]="{ 'online': isOnline, 'offline': !isOnline }"></div>
+    <span>{{ isOnline ? 'Online' : 'Offline' }}</span>
+  </div>
+
+  <div id="container">
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Search..."
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch(searchQuery)"
+      />
+    </div>    
+
+    <table class="inventory-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Quantity</th>
+          <th>Available</th>
+          <th>Last Edit</th>
+          <th>Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>{{ item.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.available ? 'Yes' : 'No' }}</td>
+          <td>{{ item.lastEdit | date: 'short' }}</td>
+          <td>
+            <span class="detail-link" (click)="goToDetail(item.id)">View &gt;</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+      <label for="itemsPerPage">Items per page:</label>
+      <select id="itemsPerPage" [(ngModel)]="itemsPerPage" (change)="updatePagination()">
+        <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{ option }}</option>
+      </select>
+      
+      <button (click)="prevPage()" [disabled]="currentPage <= 1">Previous</button>
+      <span>Page {{ currentPage }}</span>
+      <button (click)="nextPage()" [disabled]="items.length < itemsPerPage">Next</button>
+    </div>
+  </div>
+</ion-content>
