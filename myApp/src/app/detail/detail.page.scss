@@ -103,3 +103,11 @@ button {
 .offline {
   background-color: red;
 }
+
+#map {
+  height: 50; /* Full height of the viewport */
+  width: 300;   /* Full width of the container */
+  margin: 0;
+  padding: 0;
+  background: #82cfff;
+}

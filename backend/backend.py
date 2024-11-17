@@ -3,6 +3,9 @@ from flask_cors import CORS
 from flask_socketio import SocketIO
 from datetime import datetime, timedelta
 import jwt
+import os
+import base64
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -191,6 +194,89 @@ def add_item():
 
     response = jsonify(new_item)
     return response, 201
+
+
+IMAGES_FOLDER = 'Resources/images'
+LOCATION_FILE = 'Resources/locations/locations.json'
+
+
+def load_locations():
+    with open(LOCATION_FILE, "r") as f:
+        return json.load(f)
+
+
+def save_locations(data):
+    with open(LOCATION_FILE, "w") as f:
+        json.dump(data, f)
+
+
+@app.route('/save_location', methods=['POST'])
+def save_location():
+    data = request.json
+    item_id = str(data['itemId'])
+    latitude = data['latitude']
+    longitude = data['longitude']
+
+    locations = load_locations()
+    locations[item_id] = {"latitude": latitude, "longitude": longitude}
+    save_locations(locations)
+
+    return jsonify({"message": "Location saved successfully"}), 200
+
+
+@app.route('/get_location', methods=['POST'])
+def get_location():
+    data = request.json
+    item_id = str(data['itemId'])
+
+    locations = load_locations()
+    if item_id in locations:
+        return jsonify(locations[item_id]), 200
+    else:
+        return jsonify({"message": "Location not found"}), 404
+
+
+@app.route('/upload_photo', methods=['POST'])
+def upload_photo():
+    answer = protected_request(request)
+    if not answer.get('passes'):
+        return jsonify(answer)
+
+    data = request.json
+    item_id = data['itemId']
+    image_base64 = data['image']
+
+    # Decode the image and save it as a file
+    image_data = base64.b64decode(image_base64.split(",")[1])  # Remove "data:image/jpeg;base64,"
+    file_path = os.path.join(IMAGES_FOLDER, f"{item_id}.jpeg")
+
+    print('GOT HERE!!!')
+
+    with open(file_path, 'wb') as f:
+        f.write(image_data)
+
+    return jsonify({"message": "Photo saved successfully"}), 200
+
+
+@app.route('/get_photo', methods=['POST'])
+def get_photo():
+    answer = protected_request(request)
+    if not answer.get('passes'):
+        return jsonify(answer)
+
+    data = request.json
+    item_id = data['itemId']
+    file_path = os.path.join(IMAGES_FOLDER, f"{item_id}.jpeg")
+
+    if not os.path.exists(file_path):
+        return jsonify({"message": "Photo not found"}), 404
+
+    # Read the image file and encode it as base64
+    with open(file_path, 'rb') as f:
+        image_base64 = base64.b64encode(f.read()).decode('utf-8')
+
+    # Return the base64-encoded image
+    return jsonify({"image": f"data:image/jpeg;base64,{image_base64}"}), 200
 
 
 @app.route('/status', methods=['GET'])

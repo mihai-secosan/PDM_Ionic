@@ -21,7 +21,7 @@ const filter_items = (items: Item[], filter: string) => {
   return filtered_items;
 }
 
-const _getAllItems = async (page_size: number, page_number: number, filter: string): Promise<Item[]> => {
+const __getAllItems = async (page_size: number, page_number: number, filter: string): Promise<Item[]> => {
   if (await LocalStorage.getInstance().checkAndSyncIfOnline()) {
     const items = await getAllItems(0, 0);
     LocalStorage.getInstance().loadItems(items);
@@ -29,6 +29,20 @@ const _getAllItems = async (page_size: number, page_number: number, filter: stri
     return filter_items(await getAllItems(page_size, page_number), filter);
   }
   return filter_items(await LocalStorage.getInstance().getOfflineItems(page_size, page_number), filter);
+}
+
+const _getAllItems = async (page_size: number, page_number: number, filter: string, availability: string = ""): Promise<Item[]> => {
+  const items = await __getAllItems(page_size, page_number, filter);
+  if (availability === "") {
+    return items;
+  }
+  const filtered_items: Item[] = [];
+  items.forEach(item => {
+    if (item.available === (availability === 'true')) {
+      filtered_items.push(item);
+    }
+  });
+  return filtered_items;
 }
 
 const _getItem = async (item_id: number): Promise<Item | null | undefined> => {
@@ -42,7 +56,7 @@ const _updateItem = async (item_id: number, updated_data: Partial<Item>): Promis
   if (await LocalStorage.getInstance().checkAndSyncIfOnline()) {
     return await updateItem(item_id, updated_data);
   }
-  await await LocalStorage.getInstance().addChange(item_id, updated_data);
+  await LocalStorage.getInstance().addChange(item_id, updated_data);
 }
 
 const _isOnline = async (): Promise<boolean>  => {

@@ -6,11 +6,24 @@ import { FormsModule } from '@angular/forms';
 import { Item } from '../models/item.model';  // Import the Item interface
 import { _getAllItems, _isOnline } from '../services/item.service';
 import { WebSocketService } from '../services/websocket.service'; // Import the WebSocket service
+import { AnimationController } from '@ionic/angular';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-master',
   templateUrl: 'master.page.html',
   styleUrls: ['master.page.scss'],
+  animations: [
+    trigger('masterTransition', [
+      transition(':enter', [
+        style({ transform: 'rotateY(90deg)', opacity: 0 }),
+        animate('500ms ease-out', style({ transform: 'rotateY(0)', opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('500ms ease-in', style({ transform: 'rotateY(-90deg)', opacity: 0 })),
+      ]),
+    ]),
+  ],
   standalone: true,
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, CommonModule, RouterModule, FormsModule],
 })
@@ -20,6 +33,7 @@ export class MasterPage implements OnInit, ViewWillEnter {
   wsService;
   isOnline: boolean = false;
   searchQuery: string = '';
+  availabilityFilter: string = ''; // New property for availability filter
 
   // Pagination controls
   currentPage = 1;
@@ -28,14 +42,15 @@ export class MasterPage implements OnInit, ViewWillEnter {
 
   constructor(
     private router: Router, 
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private animationCtrl: AnimationController
   ) {
     this.wsService = new WebSocketService();
     this.wsService.addNewItemListener(this.handleNewItem.bind(this));
   }
 
-  private refresh(filter: string = "") {
-    _getAllItems(this.itemsPerPage, this.currentPage - 1, filter).then(data => {
+  private refresh(filter: string = "", availability: string = "") {
+    _getAllItems(this.itemsPerPage, this.currentPage - 1, filter, availability).then(data => {
       this.items = data;
       this.cdr.detectChanges();
     });
@@ -50,12 +65,16 @@ export class MasterPage implements OnInit, ViewWillEnter {
   }
 
   onSearch(query: string): void {
-    this.refresh(query);
+    this.refresh(query, this.availabilityFilter);
+  }
+
+  onFilterChange(): void {
+    this.refresh(this.searchQuery, this.availabilityFilter);
   }
 
   private handleNewItem(id: number): void {
     console.log("ItemListener received new item with ID:", id);
-    this.refresh();
+    this.refresh(this.searchQuery, this.availabilityFilter);
   }
 
   ngOnInit() {}
@@ -71,18 +90,18 @@ export class MasterPage implements OnInit, ViewWillEnter {
   // Pagination methods
   updatePagination() {
     this.currentPage = 1; // Reset to first page when items per page change
-    this.refresh();
+    this.refresh(this.searchQuery, this.availabilityFilter);
   }
 
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.refresh();
+      this.refresh(this.searchQuery, this.availabilityFilter);
     }
   }
 
   nextPage() {
     this.currentPage++;
-    this.refresh();
+    this.refresh(this.searchQuery, this.availabilityFilter);
   }
 }
